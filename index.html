@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="hi-IN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Suchna AI — Offline document reader for Indian citizens. Scan and understand official documents in your language.">
+  <meta name="theme-color" content="#1A3A6B">
+  <title>Suchna AI — दस्तावेज़ सहायक</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app-shell" id="app">
+
+  <!-- ============================================
+       SCREENS CONTAINER
+       ============================================ -->
+  <div class="screens-container">
+
+    <!-- ========== SCREEN 1 — HOME ========== -->
+    <div class="screen active" id="screen-home" data-screen="home">
+
+      <!-- Top Bar -->
+      <div class="top-bar">
+        <div class="top-bar-title">
+          <div class="app-logo">स</div>
+          <div>
+            <h1>Suchna AI</h1>
+            <div class="subtitle">दस्तावेज़ सहायक · Document Helper</div>
+          </div>
+        </div>
+        <div class="lang-selector" id="lang-selector-home">
+          <button class="lang-btn active" data-lang="hi">हिंदी</button>
+          <button class="lang-btn" data-lang="en">Eng</button>
+          <button class="lang-btn" data-lang="te">తెలు</button>
+        </div>
+      </div>
+
+      <!-- Scan Hero Button -->
+      <div class="scan-hero">
+        <div class="scan-btn-wrapper">
+          <div class="scan-btn-pulse"></div>
+          <div class="scan-btn-pulse"></div>
+          <button class="scan-btn" id="btn-scan-home" aria-label="Scan Document">
+            <span class="icon">📷</span>
+            <span class="label-en">Scan Document</span>
+            <span class="label-hi">दस्तावेज़ स्कैन करें</span>
+          </button>
+        </div>
+        <p class="scan-description">
+          Take a photo of any document to understand it
+          <span class="hi">किसी भी दस्तावेज़ की फ़ोटो लें और समझें</span>
+        </p>
+      </div>
+
+      <!-- Recent Scans -->
+      <div class="section-header">
+        <h2>📋 Recent Scans / हाल के स्कैन</h2>
+        <button class="see-all" id="btn-see-all">See All</button>
+      </div>
+
+      <div class="history-preview">
+
+        <!-- Bank Notice -->
+        <div class="history-card" data-doc="bank" id="card-bank-notice">
+          <div class="doc-thumb bank">🏦</div>
+          <div class="doc-info">
+            <div class="doc-title">Bank Notice — SBI Loan</div>
+            <div class="doc-date">14 March 2026</div>
+            <div class="doc-summary">आपका लोन EMI 2 महीने से बकाया है। ₹4,300 जमा करें।</div>
+          </div>
+          <div class="doc-badge">
+            <span class="badge badge-reminder">⏰ Reminder Set</span>
+            <button class="play-mini-btn" aria-label="Play audio">▶</button>
+          </div>
+        </div>
+
+        <!-- Government Letter -->
+        <div class="history-card" data-doc="govt" id="card-govt-letter">
+          <div class="doc-thumb govt">🏛️</div>
+          <div class="doc-info">
+            <div class="doc-title">Government Letter — PM Kisan</div>
+            <div class="doc-date">10 March 2026</div>
+            <div class="doc-summary">PM किसान योजना की ₹6,000 की किस्त आपके खाते में आ गई है।</div>
+          </div>
+          <div class="doc-badge">
+            <span class="badge badge-read">✓ Read</span>
+            <button class="play-mini-btn" aria-label="Play audio">▶</button>
+          </div>
+        </div>
+
+        <!-- School Form -->
+        <div class="history-card" data-doc="school" id="card-school-form">
+          <div class="doc-thumb school">🏫</div>
+          <div class="doc-info">
+            <div class="doc-title">School Form — Admission</div>
+            <div class="doc-date">5 March 2026</div>
+            <div class="doc-summary">बच्चे के एडमिशन के लिए 25 मार्च तक फॉर्म जमा करें।</div>
+          </div>
+          <div class="doc-badge">
+            <span class="badge badge-new">New</span>
+            <button class="play-mini-btn" aria-label="Play audio">▶</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 2 — CAMERA ========== -->
+    <div class="screen camera-screen" id="screen-camera" data-screen="camera">
+
+      <div class="camera-top-bar">
+        <button class="camera-back-btn" id="btn-camera-back" aria-label="Go back">←</button>
+        <div class="camera-hint">
+          Place document inside the box
+          <span class="hi">दस्तावेज़ को बॉक्स में रखें</span>
+        </div>
+        <div style="width:40px"></div>
+      </div>
+
+      <div class="camera-viewfinder">
+        <div class="camera-bg-simulation"></div>
+        <div class="viewfinder-frame">
+          <div class="viewfinder-corner tl"></div>
+          <div class="viewfinder-corner tr"></div>
+          <div class="viewfinder-corner bl"></div>
+          <div class="viewfinder-corner br"></div>
+          <div class="scan-line"></div>
+          <div class="viewfinder-doc-preview">
+            <div class="doc-icon">📄</div>
+            <div class="doc-text">Align your document here<br><span style="font-family: var(--font-hi);">दस्तावेज़ यहाँ रखें</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="camera-controls">
+        <label class="gallery-btn" aria-label="Open gallery">
+          <span>🖼️</span>
+          <span class="gallery-label">Gallery</span>
+          <input type="file" accept="image/*" hidden id="input-gallery">
+        </label>
+        <label class="capture-btn" aria-label="Capture document">
+          <input type="file" accept="image/*" capture="environment" hidden id="input-capture">
+        </label>
+        <button class="flash-btn" id="btn-flash" aria-label="Toggle flash">⚡</button>
+      </div>
+
+      <!-- Processing Overlay -->
+      <div class="processing-overlay" id="processing-overlay">
+        <div class="processing-spinner">
+          <div class="ring"></div>
+          <div class="ring"></div>
+          <div class="ring"></div>
+          <div class="center-icon">📄</div>
+        </div>
+        <div class="processing-text">
+          <div class="main">Reading your document offline...</div>
+          <div class="hi">आपका दस्तावेज़ पढ़ा जा रहा है...</div>
+        </div>
+        <div class="processing-progress">
+          <div class="processing-progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="offline-badge">
+          <div class="dot"></div>
+          <span class="airplane">✈️</span>
+          <span>No internet needed / इंटरनेट की ज़रूरत नहीं</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 3 — RESULTS ========== -->
+    <div class="screen results-screen" id="screen-results" data-screen="results">
+
+      <div class="results-top-bar">
+        <button class="results-back-btn" id="btn-results-back" aria-label="Go back">←</button>
+        <h2>Scan Results / नतीजे</h2>
+        <span class="results-badge">
+          <span class="badge badge-reminder">🏦 Bank Notice</span>
+        </span>
+      </div>
+
+      <div class="results-content">
+
+        <!-- Document Type -->
+        <div class="doc-type-chip">
+          <span>🏦</span>
+          Bank Notice — SBI Loan EMI Overdue
+        </div>
+
+        <!-- Captured Document Preview -->
+        <div class="captured-doc-preview hidden" id="captured-doc-preview">
+          <div class="captured-doc-label">📸 Your Document / आपका दस्तावेज़</div>
+          <img id="captured-doc-img" src="" alt="Captured document photo">
+        </div>
+
+        <!-- Summary Card -->
+        <div class="result-card summary-card">
+          <div class="card-header">
+            <div class="card-icon">📝</div>
+            <div>
+              <div class="card-title">
+                What this document says
+                <span class="hi">यह दस्तावेज़ क्या कहता है</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="summary-text" id="summary-text">
+            आपका लोन EMI 2 महीने से बकाया है। 20 तारीख तक ₹4,300 जमा करें, वरना जुर्माना लगेगा।
+          </div>
+
+          <button class="play-audio-btn" id="btn-play-audio">
+            <span class="play-icon" id="play-icon-main">▶</span>
+            <div>
+              <div>Listen / सुनें</div>
+              <div class="hi">आवाज़ में सुनें</div>
+            </div>
+            <div class="audio-waves hidden" id="audio-waves">
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Action Card -->
+        <div class="result-card action-card">
+          <div class="card-header">
+            <div class="card-icon">⚡</div>
+            <div>
+              <div class="card-title">
+                What you must do
+                <span class="hi">आपको क्या करना है</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-list">
+            <div class="action-item">
+              <div class="action-icon calendar">📅</div>
+              <div class="action-text">
+                <div class="action-label">Pay by / भुगतान की तारीख</div>
+                <div class="action-value">20 March 2026</div>
+              </div>
+            </div>
+            <div class="action-item">
+              <div class="action-icon money">💰</div>
+              <div class="action-text">
+                <div class="action-label">Amount Due / बकाया राशि</div>
+                <div class="action-value amount">₹4,300</div>
+              </div>
+            </div>
+            <div class="action-item">
+              <div class="action-icon phone">📞</div>
+              <div class="action-text">
+                <div class="action-label">Call Branch / ब्रांच को कॉल करें</div>
+                <div class="action-value">1800-111-0019</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reminder CTA -->
+        <div class="floating-cta">
+          <button class="reminder-cta" id="btn-set-reminder">
+            <span>⏰</span>
+            <div>
+              <div>Set Reminder</div>
+              <div class="hi">याददाश्त सेट करें</div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 4 — CONFIRMATION ========== -->
+    <div class="screen confirmation-screen" id="screen-confirmation" data-screen="confirmation">
+
+      <div class="confirm-checkmark" id="confirm-check">✓</div>
+
+      <h2 class="confirm-title">Reminder Set!</h2>
+      <p class="confirm-title-hi">याददाश्त 18 मार्च के लिए सेट हुई ✓</p>
+
+      <div class="confirm-summary-card">
+        <div class="confirm-detail">
+          <span class="detail-label">📄 Document</span>
+          <span class="detail-value">SBI Loan Notice</span>
+        </div>
+        <div class="confirm-detail">
+          <span class="detail-label">⏰ Reminder Date</span>
+          <span class="detail-value">18 March 2026</span>
+        </div>
+        <div class="confirm-detail">
+          <span class="detail-label">💰 Amount to Pay</span>
+          <span class="detail-value highlight">₹4,300</span>
+        </div>
+        <div class="confirm-detail">
+          <span class="detail-label">📅 Due Date</span>
+          <span class="detail-value">20 March 2026</span>
+        </div>
+      </div>
+
+      <div class="confirm-actions">
+        <button class="btn-primary" id="btn-scan-another">
+          <span>📷</span>
+          Scan Another Document / एक और दस्तावेज़ स्कैन करें
+        </button>
+        <button class="btn-secondary" id="btn-share-family">
+          <span class="whatsapp-icon">💬</span>
+          Share with Family / परिवार से शेयर करें
+        </button>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 5 — HISTORY ========== -->
+    <div class="screen history-screen" id="screen-history" data-screen="history">
+
+      <div class="history-top-bar">
+        <span style="font-size: 24px;">📋</span>
+        <h2>History / इतिहास</h2>
+      </div>
+
+      <!-- Filter Chips -->
+      <div class="filter-chips" id="filter-chips">
+        <button class="filter-chip active" data-filter="all">All / सभी</button>
+        <button class="filter-chip" data-filter="bank">🏦 Bank</button>
+        <button class="filter-chip" data-filter="govt">🏛️ Government</button>
+        <button class="filter-chip" data-filter="school">🏫 School</button>
+      </div>
+
+      <!-- History List -->
+      <div class="history-list" id="history-list">
+
+        <div class="history-card" data-doc="bank" data-category="bank">
+          <div class="doc-thumb bank">🏦</div>
+          <div class="doc-info">
+            <div class="doc-title">Bank Notice — SBI Loan</div>
+            <div class="doc-date">14 March 2026</div>
+            <div class="doc-summary">आपका लोन EMI 2 महीने से बकाया है। 20 तारीख तक ₹4,300 जमा करें, वरना जुर्माना लगेगा।</div>
+          </div>
+          <div class="doc-badge">
+            <span class="badge badge-reminder">⏰ Reminder</span>
+            <button class="play-mini-btn" aria-label="Play audio">▶</button>
+          </div>
+        </div>
+
+        <div class="history-card" data-doc="govt" data-category="govt">
+          <div class="doc-thumb govt">🏛️</div>
+          <div class="doc-info">
+            <div class="doc-title">Government Letter — PM Kisan</div>
+            <div class="doc-date">10 March 2026</div>
+            <div class="doc-summary">PM किसान योजना की ₹6,000 की किस्त आपके खाते में भेजी गई है। अपने बैंक में जाकर पासबुक अपडेट करें।</div>
+          </div>
+          <div class="doc-badge">
+            <span class="badge badge-read">✓ Read</span>
+            <button class="play-mini-btn" aria-label="Play audio">▶</button>
+          </div>
+        </div>
+
+        <div class="history-card" data-doc="school" data-category="school">
+          <div class="doc-thumb school">🏫</div>
+          <div class="doc-info">
+            <div class="doc-title">School Form — Admission</div>
+            <div class="doc-date">5 March 2026</div>
+            <div class="doc-summary">बच्चे के एडमिशन के लिए 25 मार्च तक फॉर्म जमा करें। आधार कार्ड और जन्म प्रमाण पत्र लगाएं।</div>
+          </div>
+          <div class="doc-badge">
+            <span class="badge badge-new">New</span>
+            <button class="play-mini-btn" aria-label="Play audio">▶</button>
+          </div>
+        </div>
+
+        <div class="history-card" data-doc="bank" data-category="bank">
+          <div class="doc-thumb bank">🏦</div>
+          <div class="doc-info">
+            <div class="doc-title">Bank Statement — PNB</div>
+            <div class="doc-date">28 February 2026</div>
+            <div class="doc-summary">फरवरी 2026 का बैंक स्टेटमेंट। कुल जमा: ₹12,400। कुल निकासी: ₹9,800। शेष: ₹15,230।</div>
+          </div>
+          <div class="doc-badge">
+            <span class="badge badge-read">✓ Read</span>
+            <button class="play-mini-btn" aria-label="Play audio">▶</button>
+          </div>
+        </div>
+
+        <div class="history-card" data-doc="govt" data-category="govt">
+          <div class="doc-thumb govt">🏛️</div>
+          <div class="doc-info">
+            <div class="doc-title">Ration Card — Renewal Notice</div>
+            <div class="doc-date">20 February 2026</div>
+            <div class="doc-summary">आपके राशन कार्ड का नवीनीकरण 15 अप्रैल तक करवाएं। नज़दीकी CSC केंद्र पर जाएं।</div>
+          </div>
+          <div class="doc-badge">
+            <span class="badge badge-reminder">⏰ Reminder</span>
+            <button class="play-mini-btn" aria-label="Play audio">▶</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 6 — SETTINGS ========== -->
+    <div class="screen settings-screen" id="screen-settings" data-screen="settings">
+
+      <div class="settings-top-bar">
+        <span style="font-size: 24px;">⚙️</span>
+        <h2>Settings / सेटिंग्स</h2>
+      </div>
+
+      <div class="settings-content">
+
+        <!-- Language -->
+        <div class="settings-section">
+          <div class="settings-section-title">🌐 Language / भाषा</div>
+          <div class="radio-group" id="settings-lang-group">
+            <label class="radio-option">
+              <input type="radio" name="language" value="hi" checked>
+              <span class="radio-label">
+                Hindi
+                <span class="native">हिंदी</span>
+              </span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="language" value="en">
+              <span class="radio-label">
+                English
+                <span class="native">अंग्रेज़ी</span>
+              </span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="language" value="te">
+              <span class="radio-label">
+                Telugu
+                <span class="native">తెలుగు</span>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Voice Speed -->
+        <div class="settings-section">
+          <div class="settings-section-title">🔊 Voice Speed / आवाज़ की गति</div>
+          <div class="speed-slider-container">
+            <div class="speed-labels">
+              <span>🐢 Slow / धीमी</span>
+              <span class="active-speed" id="speed-label">Normal / सामान्य</span>
+              <span>🐇 Fast / तेज़</span>
+            </div>
+            <input type="range" class="speed-slider" id="speed-slider" min="0" max="2" value="1" step="1">
+          </div>
+        </div>
+
+        <!-- Offline Status -->
+        <div class="settings-section">
+          <div class="settings-section-title">📡 Connection Status</div>
+          <div class="offline-status">
+            <div class="status-icon">✈️</div>
+            <div class="status-text">
+              <div class="status-label">Works Offline / ऑफ़लाइन काम करता है</div>
+              <div class="status-desc">No internet needed to scan documents</div>
+            </div>
+            <span class="status-badge-pill">ACTIVE</span>
+          </div>
+        </div>
+
+        <!-- Privacy -->
+        <div class="settings-section">
+          <div class="settings-section-title">🛡️ Privacy / गोपनीयता</div>
+          <div class="privacy-card">
+            <div class="shield-icon">🔒</div>
+            <div class="privacy-text">
+              <div class="privacy-en">Your documents never leave this phone.</div>
+              <div class="privacy-hi">आपके दस्तावेज़ इस फोन से बाहर नहीं जाते।</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- About -->
+        <div class="settings-section">
+          <div class="settings-section-title">ℹ️ About / बारे में</div>
+          <div class="about-info">
+            <div class="about-row">
+              <span class="about-label">App Version</span>
+              <span class="about-value">Suchna AI v1.0.0</span>
+            </div>
+            <div class="about-row">
+              <span class="about-label">Build</span>
+              <span class="about-value">2026.03.15</span>
+            </div>
+            <div class="about-row">
+              <span class="about-label">AI Model</span>
+              <span class="about-value">On-device (Offline)</span>
+            </div>
+            <div class="about-row">
+              <span class="about-label">Made with ❤️</span>
+              <span class="about-value">India 🇮🇳</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============================================
+       BOTTOM NAVIGATION
+       ============================================ -->
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="nav-item active" data-target="home" id="nav-home">
+      <span class="nav-icon">📷</span>
+      <span class="nav-label">Scan</span>
+    </button>
+    <button class="nav-item" data-target="history" id="nav-history">
+      <span class="nav-icon">📋</span>
+      <span class="nav-label">History</span>
+    </button>
+    <button class="nav-item" data-target="settings" id="nav-settings">
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label">Settings</span>
+    </button>
+  </nav>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
