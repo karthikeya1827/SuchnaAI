@@ -7,6 +7,7 @@
   <meta name="theme-color" content="#1A3A6B">
   <title>Suchna AI — दस्तावेज़ सहायक</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
 <body>
 
@@ -120,17 +121,19 @@
 
       <div class="camera-viewfinder">
         <div class="camera-bg-simulation"></div>
+        <!-- Live camera feed -->
+        <video id="cam" autoplay playsinline></video>
+        <canvas id="canvas" hidden></canvas>
+        <!-- Viewfinder frame overlays on top of video -->
         <div class="viewfinder-frame">
           <div class="viewfinder-corner tl"></div>
           <div class="viewfinder-corner tr"></div>
           <div class="viewfinder-corner bl"></div>
           <div class="viewfinder-corner br"></div>
           <div class="scan-line"></div>
-          <div class="viewfinder-doc-preview">
-            <div class="doc-icon">📄</div>
-            <div class="doc-text">Align your document here<br><span style="font-family: var(--font-hi);">दस्तावेज़ यहाँ रखें</span></div>
-          </div>
         </div>
+        <!-- Camera status -->
+        <div class="cam-status" id="cam-status">Starting camera… / कैमरा शुरू हो रहा है…</div>
       </div>
 
       <div class="camera-controls">
@@ -139,10 +142,11 @@
           <span class="gallery-label">Gallery</span>
           <input type="file" accept="image/*" hidden id="input-gallery">
         </label>
-        <label class="capture-btn" aria-label="Capture document">
+        <button class="capture-btn" id="btn-capture" aria-label="Capture document"></button>
+        <label class="flash-btn" aria-label="Import from files">
+          📁
           <input type="file" accept="image/*" capture="environment" hidden id="input-capture">
         </label>
-        <button class="flash-btn" id="btn-flash" aria-label="Toggle flash">⚡</button>
       </div>
 
       <!-- Processing Overlay -->
